@@ -1,0 +1,70 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.0.6] - 2021-10-21
+
+### Added
+- Add file 'log.c' and 'log.h' to manipulate operation with the log file
+- Add several log related function in log.c
+- Add the headline, the basic introduction part as well as the mandatory work part in the README file
+
+
+## [0.0.5] - 2021-10-19
+### Added
+- README section on function list.
+- Headline of the README file
+
+### Changed
+- Update the CHANGELOG to record changes made to the project
+
+
+## [0.0.4] - 2021-10-17
+### Added
+- function animation (file 'animation.c')
+- file animation.c
+- file animation.h
+- related sub-function for function animation (file 'animation.c')
+
+### Changed
+- Update the CHANGELOG to record changes made to the project
+- Indent all codes
+- revise the algorithm in car_animation function in regard to add_cars and delete_cars
+
+### Removed
+- Remove empty sections from CHANGELOG
+- Remove all unnecessary spaces 
+
+
+## [0.0.3] - 2021-10-13
+### Added
+- memory clearing at the end of each round
+- optimizing round settings to minimize the influence a round could cause to the following round
+
+### Changed
+- Simply the function main by remove irrelevant codes to other places (e.g 'init_vars.m') and add annotations to it
+- Add annotations to functions
+- Add necessary annotations to codes in order to be more reader-friendly
+
+### Removed
+- Remove empty sections from the project
+
+
+## [0.0.2] - 2021-10-11
+### Added
+- function main (file 'main.c')
+- basic properties handled in one file (file 'basic_property.h')
+- input handling
+- type card_pile (as a queue)
+- function related to basic manipulation of the type card_pile
+- type player (as a structure)
+- type table (as a two-direction rounded linked list)
+
+## [0.0.1] - 2021-10-10
+### Added
+- This CHANGELOG file to hopefully serve as a record for ENGR151 project 2.
+- README now contains function explanation and basic thoughts and methodology in accomplishing the project
+- the editor of this CHANGELOG file Zhou Ziming 521370910142
+

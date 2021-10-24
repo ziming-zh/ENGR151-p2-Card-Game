@@ -1,0 +1,79 @@
+# p2m1 has finished
+
+### Contributor(s) of this project:
+
+*This project is completed solely by Zhou Ziming 521370910142. That means all of the files and codes have been scripted by the author individually.*
+
+Name: Zhou Ziming
+
+Student ID: 521370910142
+
+identity: the ONLY contributor of this project
+
+### The tasks finished in p2m1:
+
+##### Mandatory Part: 
+
+- Milestone 1
+  - Define the card structure: struct card_pile in "card_pile.h"
+  - Define the player structure : struct player in "basic.h"
+  - Accept command line arguments: in "main.c"
+  - Write a function to play a card: separate it into card-related functions "add_card","read_card"and"delete_card" in "basic.c"
+  - Write a function to draw (take) a card from the card pile: separate it into pile-related functions "push_card","pull_card" in "card_pile.c"
+- Milestone 2
+  - Write a function to shuffle decks of cards: function "shuffle_card" in "card_pile.c"
+  - Write a function to sort deck of cards: now using the prototype qsort in "stdlib.h"
+  - Write a function to deal the cards to the players: in function "game" part "initializing personal card"
+  - Write a function to decide the first player: function "init_order" in "basic.c"
+  - 
+- Milestone 3
+
+
+
+
+
+*Special Notation:*
+
+
+
+##### Bonus Part: <>
+
+bonus <> is for ''
+
+bonus <> is for ''
+
+bonus <> is for ''
+
+
+### A brief introduction to fundamental settings of the project
+
+### User Interface Introduction
+
+1. the beginning interface 
+
+2. the ongoing interface 
+
+3. the ending interface 
+
+### Special tasks collected in P2
+
+1. create a log file
+2. create a demo mode
+3. create a -h/--help (an instruction file './onecard.h')
+4. redraw the screen after turn which requires detection of OS to complete differently
+5. GTK  for graphic drawing and socket for remote connection
+
+### Techniques and methodology learned in P2
+
+1. layer strategy
+
+### The specific role done in p2m1
+
+### Functions with its aim designed before p2m1
+
+### Bug Section
+
+### Future Goals:
+- Revise the card_pile structure from queue to a one direction linked list (where we store not only the front and last of the list) due to the requirement
+- Design the algorithm to read the log file and manifest the whole animation entirely based on the file.
+- Think about revision of the project from the suggestions from instructors and the TA team. Learn to improve the efficiency of coding and enhance the ability for debugging (always contributing huge amount of time and effort trying to fix a bug)
