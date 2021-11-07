@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2021-11-7
+
+### Changed
+- Change the strategy to enable and disable GTK mode by establish a new GTK_ENABLED.h file which will not comflict with all of the existing files.
+- Update the CHANGELOG to record changes made to the project
+- Indent all codes
+
+## [0.1.1] - 2021-11-5
+
+### Added
+- Add necessary function in "mgtk.c" to ensure the whole GTK version works smoothly
+- Add content "mandatory part" and "bonus part" in README file to keep full track of the schedule
+
+### Changed
+- Change the original function "animation" "read_pile" "read_table" to adapt GTK mode
+- Update the CHANGELOG to record changes made to the project
+- Indent all codes
+
+## [0.1.0] - 2021-11-1
+
+### Added
+- Add related gtk package in CMakeLists.txt to make sure the gtk function works well
+- Add file "mgtk.c" as well as "mgtk.h" to enact GUI programming
+- Add macro sign GTK to make functions work differently in GTK and none-GTK mode.
+
+### Changed
+- Update the CHANGELOG to record changes made to the project
+- Indent all codes
+
+### Removed
+- Remove empty sections from CHANGELOG
+- Remove all unnecessary spaces
+
 ## [0.0.6] - 2021-10-21
 
 ### Added
@@ -31,7 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update the CHANGELOG to record changes made to the project
 - Indent all codes
-- revise the algorithm in car_animation function in regard to add_cars and delete_cars
 
 ### Removed
 - Remove empty sections from CHANGELOG

@@ -38,11 +38,13 @@ void read_log(char* file_name)
     fgets(line,MAX_LINE_NUM,log);
     fgets(line,MAX_LINE_NUM,log);
     fgets(line,MAX_LINE_NUM,log);
+    fgets(line,MAX_LINE_NUM,log);
 
     if(log==NULL){
         fprintf(stderr,"Error#001:Unable to open file %s",file_name);
         exit(EXIT_FAILURE);
     }
+    printf("This is a demo for the card game. You can continue pressing enter to see the whole process of the game.\n");
     while(fgets(line,MAX_LINE_NUM,log)!=NULL)
     {
         for(i=0;i<strlen(line);i++)

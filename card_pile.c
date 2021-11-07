@@ -5,10 +5,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include "card_pile.h"
-#include "basic.h"
-#include "log.h"
 
+#include "log.h"
+#include "GTK_ENABLED.h"
+#ifdef GTK
+#include "mgtk.h"
+#endif
 //initialize
+
 void init_pile(pile* q)
 {
     q->first=q->last=NULL;
@@ -20,25 +24,21 @@ int pile_empty(pile* q)
     return q->first==NULL && q->last==NULL;
 }
 //read the top card of the pile without picking it up
+#ifndef GTK
 void read_pile(pile *q,FILE* log,int n)
 {
     int i=0;
-    pile *temp=q;
+    node *temp=q->first;
     if(pile_empty(q))
     {
         fprintf(stderr,"Error#101: Card Pile Empty. Cannot read the pile.\n");
         close_log(log);
         exit(EXIT_FAILURE);
     }
-    while(!pile_empty(temp))
-    {
-        tell_card(temp->first->card_num,log);
-        if(temp->first==temp->last)
-            temp->first=temp->last=NULL;
-        else{
-            temp->first=temp->first->next;
-        }
+    while(temp->next!=NULL){
+        tell_card(temp->card_num,log);
         i++;
+        temp=temp->next;
         if(i==n){
             printf("... # more results skipped here\n");
             if(log!=NULL)
@@ -50,6 +50,41 @@ void read_pile(pile *q,FILE* log,int n)
     if(log!=NULL)
         fprintf(log,"\n");
 }
+#endif
+#ifdef GTK
+void read_pile(GtkWidget *window,GtkWidget *fixed,pile *q,FILE* log,int n)
+{
+    int i=0;
+    node *temp=q->first;
+    GtkWidget *label;
+    if(pile_empty(q))
+    {
+        fprintf(stderr,"Error#101: Card Pile Empty. Cannot read the pile.\n");
+        close_log(log);
+        exit(EXIT_FAILURE);
+    }
+    while(temp->next!=NULL){
+        tell_card(temp->card_num,log);
+        disp_card(temp->card_num,window,i%7*200, 100+floor(i/7)*200,fixed,-1,NULL);
+        //gtk_widget_show_all(window);
+        i++;
+        temp=temp->next;
+        if(i==n){
+            printf("... # more results skipped here\n");
+            if(log!=NULL)
+                fprintf(log,"... # more results skipped here\n");
+            break;
+        }
+    }
+    label= gtk_label_new("... # more results skipped here");
+    gtk_fixed_put(GTK_FIXED(fixed), label,0 , 250+ floor(i/7)*200);
+    gtk_widget_set_size_request(label, 300, 35);
+    printf("\n");
+    if(log!=NULL)
+        fprintf(log,"\n");
+
+}
+#endif
 void push_card(pile *q,int new_card)
 {
     node *s;

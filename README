@@ -1,4 +1,4 @@
-# p2m1 has finished
+# p2m2 has finished
 
 ### Contributor(s) of this project:
 
@@ -25,20 +25,31 @@ identity: the ONLY contributor of this project
   - Write a function to sort deck of cards: now using the prototype qsort in "stdlib.h"
   - Write a function to deal the cards to the players: in function "game" part "initializing personal card"
   - Write a function to decide the first player: function "init_order" in "basic.c"
-  - 
+  - Write functions allowing several players to play together: function "animation" in "animation.c"
+  - Write a function to calculate the round and game result": game_winning detection (embedded in function "game" in "main.c")
+  - Define the deck data structure using an array;
+  - Arrange all the players in an array;
 - Milestone 3
+  - Use a circular double linked list for the players; (struct "table" together with struct "player" in file "basic.h")
+  - Use a dynamic array to handle the stock and discard piles; (struct "pile" together with struct "node" in file "card_pile.h")
+  - Write a function to restore the stock pile; (to make the whole thing easier, I embedded the auto-detect and restore function in function "pull_card" so that every time I pull a card it will check whether the pile is empty and auto-fill the pile if it is empty)
+  - Write a function to dump the game details into a log file; (log related function all stored in file "log.c")
+  - Complete both the real game and the demo mode; (demo mode is not written in GTK version since the whole translation is too complex, the command-line demo showing function is "read_log" in file "log.c")
+  - Proof-read you code and ensure it is fully complying with the C standard, C11 revision; (**Haven't checked yet**)
 
 
 
 
 
-*Special Notation:*
+*Special Notation:* NONE
 
 
 
-##### Bonus Part: <>
+##### Bonus Part: <4>
 
-bonus <> is for ''
+bonus <4> is for ''Using a toolkit to implement a GUI"
+
+​	for this bonus I'm using the gtk+3.0 package in mingw64
 
 bonus <> is for ''
 
@@ -47,13 +58,10 @@ bonus <> is for ''
 
 ### A brief introduction to fundamental settings of the project
 
-### User Interface Introduction
+#### User Interface Introduction
 
-1. the beginning interface 
+1. Please notify that the initial 
 
-2. the ongoing interface 
-
-3. the ending interface 
 
 ### Special tasks collected in P2
 
@@ -67,7 +75,7 @@ bonus <> is for ''
 
 1. layer strategy
 
-### The specific role done in p2m1
+### 
 
 ### Functions with its aim designed before p2m1
 

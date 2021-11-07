@@ -1,9 +1,10 @@
 //
 // Created by Ziming on 2021/10/13.
 //
-
-#include "animation.h"
 #include <stdlib.h>
+#include "animation.h"
+
+
 
 void init_status(game_status *st){
     st->invalid=0;
@@ -112,6 +113,7 @@ int card_available(int cur,player *pl,game_status* st)
     st->effect=1;
     return 0;
 }
+#ifndef GTK
 void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* counter,FILE *log,int pl)
 {
     int i;
@@ -124,8 +126,15 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
 
     int result=0;
     ask_command(log);
+#ifdef WIN32
     system("clear");
+#endif
+#ifdef WIN64
+    system("clear");
+#endif
+#ifdef linux
     system("cls");
+#endif
     printf("---- Game start ----\n");
     if(log!=NULL)
         fprintf(log,"---- Game start ----\n");
@@ -264,3 +273,220 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
 
 
 }
+#endif
+#ifdef GTK
+void set_up_animation(GtkWidget *widget,gpointer pt){
+    animation_data *data1=(animation_data*)pt;
+    GtkWidget *window=data1->windows;
+    GtkWidget *button;
+    GtkWidget *fixed =data1->fixed;
+    gtk_widget_destroy(fixed);
+    fixed=gtk_fixed_new();
+    gtk_container_add(GTK_CONTAINER(window),fixed);
+    data1->fixed=fixed;
+    GtkWidget *label;
+    label= gtk_label_new("Game Start");
+    gtk_fixed_put(GTK_FIXED(fixed), label,0 , 0);
+    gtk_widget_set_size_request(label, 180, 35);
+
+    label= gtk_label_new("First card:");
+    gtk_fixed_put(GTK_FIXED(fixed), label,0 , 50);
+    gtk_widget_set_size_request(label, 300, 35);
+
+    //ask_command(data1->log);
+    FILE *log=data1->log;
+    printf("---- Game start ----\n");
+    if(log!=NULL)
+        fprintf(log,"---- Game start ----\n");
+    data1->cur=pull_card(data1->dock_pile,data1->disc_pile,data1->card_counter,0,log);
+
+    printf("First card:");
+    if(log!=NULL)
+        fprintf(log,"First card:");
+    tell_card(data1->cur,log);
+    disp_card(data1->cur,window,400,300,fixed,-1,NULL);
+    printf("\n");
+    if(log!=NULL)
+        fprintf(log,"\n");
+
+    button= gtk_button_new_with_label("Continue");
+    gtk_fixed_put(GTK_FIXED(fixed), button,600 , 800);
+    gtk_widget_set_size_request(button, 100, 35);
+    gtk_widget_show_all(fixed);
+    g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(animation),data1);
+
+}
+void animation(GtkWidget *widget,gpointer pt)
+{
+    int i;
+    animation_data *data1=(animation_data*)pt;
+    ///get a card from the top of the pile
+    GtkWidget *window=data1->windows;
+    GtkWidget *button;
+    GtkWidget *label;
+    GtkWidget *fixed =data1->fixed;
+    gtk_widget_destroy(fixed);
+    fixed=gtk_fixed_new();
+    data1->fixed=fixed;
+    gtk_container_add(GTK_CONTAINER(window),fixed);
+    int **card=data1->cards;
+    int n=data1->num;
+    int c=data1->c;
+    int d=data1->d;
+    int r=data1->r;
+    int *score=data1->score;
+    pile* dock_pile=data1->dock_pile;
+    pile* disc_pile=data1->disc_pile;
+    table *t=data1->t;
+    FILE *log=data1->log;
+    game_status *st=data1->st;
+    char words[30];
+    int j = 0;
+
+    int result=0;
+    sprintf(words,"player %d",data1->pl);
+    label= gtk_label_new("Game Start");
+    gtk_fixed_put(GTK_FIXED(fixed), label,0 , 0);
+    gtk_widget_set_size_request(label, 180, 35);
+
+    label= gtk_label_new(words);
+    gtk_fixed_put(GTK_FIXED(fixed), label,0 , 50);
+    gtk_widget_set_size_request(label, 300, 35);
+
+    printf("---------------player %d--------------\n",data1->pl);
+    if(!card_available(data1->cur,t->next,st) || st->forced)
+    {
+        printf("Sorry, but it seems that you cannot play any cards now. Now draw cards from the pile\n");
+        st->draw=1;
+        st->forced=0;
+        data1->nxt=data1->cur;
+        label= gtk_label_new("Sorry, but it seems that you cannot play any cards now.");
+        gtk_fixed_put(GTK_FIXED(fixed), label,200 , 100);
+        gtk_widget_set_size_request(label, 300, 50);
+        button= gtk_button_new_with_label("Continue");
+        gtk_fixed_put(GTK_FIXED(fixed), button,600 , 800);
+        gtk_widget_set_size_request(button, 100, 35);
+
+        gtk_widget_show_all(fixed);
+
+
+        g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(act_status),data1);
+    }
+    else{
+        //let the player choose which car to play
+        printf("Chose your card from your card pile below:\n");
+        for(j=0;j<t->next->card_num;j++)
+        {
+            tell_card(t->next->card[j],NULL);
+            disp_card(t->next->card[j],window,j%7*200+200, 100+floor(j/7)*200,fixed,j,data1);
+        }
+        printf("\nNO. of cards(count from left):");
+        /***
+         * get card id by selecting
+         */
+
+    }
+    gtk_widget_show_all(fixed);
+
+
+}
+#endif
+#ifdef CHECK
+void check_valid(){
+
+
+
+            ///check whether the game ends
+            if(t->next->card_num==0)
+            {
+                result=1;
+                printf("Player %d wins!\n",data1->pl);
+                if(log!=NULL)
+                    fprintf(log,"Player %d wins!\n",data1->pl);
+                t->win=data1->pl;
+                break;
+            }
+        }
+        ///display the attribute effect of the player if there is one
+        if(st->skip)
+        {
+            move(t,st->dir);
+            st->skip=0;
+            data1->pl+=st->dir;
+        }
+        if(st->draw)
+        {
+            printf("#Panelty Attention! %d cards will be added!\n",st->effect);
+            printf("Player %d draws:",data1->pl);
+            if(log!=NULL)
+                fprintf(log,"Player %d draws:",data1->pl);
+            int add;
+            for(j=0;j<st->effect;j++){
+                add = pull_card(dock_pile, disc_pile, data1->card_counter, 0,log);
+                tell_card(add,log);
+                add_card(t->next,add);
+            }
+            printf("\n");
+            if(log!=NULL)
+                fprintf(log,"\n");
+            st->draw=0;
+            st->effect=0;
+            st->under_attack=0;
+        }
+        ///display the remaining card of the player
+        printf("Player %d cards:",data1->pl);
+        if(log!=NULL)
+            fprintf(log,"Player %d cards:",data1->pl);
+        for(j=0;j<t->next->card_num;j++)
+        {
+            tell_card(t->next->card[j],log);
+        }
+        printf("\n");
+        if(log!=NULL)
+            fprintf(log,"\n");
+
+        if(st->redirect==1){
+            move(t,st->dir);
+            data1->pl+=st->dir;
+            st->redirect=0;
+        }
+
+        //display the attribute effect of the player if there is one
+
+
+
+        printf("the previously played card (");
+        if(log!=NULL)
+            fprintf(log,"# clear screen here for a real game and show the previously played card (");
+        tell_card(data1->nxt,log);
+        printf(")\n");
+        if(log!=NULL)
+            fprintf(log,")\n");
+
+
+        //prepare for the next player
+        move(t,st->dir);
+        data1->cur=data1->nxt;
+    }
+    data1->pl+=st->dir;
+    if(data1->pl<=0)
+        data1->pl+=n;
+    if(data1->pl>n)
+        data1->pl-=n;
+
+
+    if(result){
+
+    }
+    else{
+        button= gtk_button_new_with_label("Continue");
+        gtk_fixed_put(GTK_FIXED(fixed), button,600 , 800);
+        gtk_widget_set_size_request(button, 100, 35);
+        gtk_widget_show_all(fixed);
+        data1->pl=0;
+        g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(animation),data1);
+    }
+
+
+}
+#endif

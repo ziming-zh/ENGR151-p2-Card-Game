@@ -2,6 +2,7 @@
 // Created by Ziming on 2021/10/12.
 //
 #include "basic.h"
+#include "mgtk.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,7 +29,7 @@ void init_table(table *t)
 {
     t->pre=t->next=t->head=NULL;
 }
-
+#ifndef GTK
 void read_table(table *t,int dir,FILE *log,int sec,int *score)
 {
 
@@ -78,6 +79,77 @@ void read_table(table *t,int dir,FILE *log,int sec,int *score)
     if(log!=NULL)
         fprintf(log,"\n");
 }
+#endif
+#ifdef GTK
+void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,int sec,int *score)
+{
+    GtkWidget *label;
+
+    char content[40];
+    player *temp=t->next;
+    int pl=t->win-1;
+    int n=t->n;
+    int rem,j;
+    int sum=100;
+    do{
+
+        printf("Player %d:",pl+1);
+        if(log!=NULL)
+            fprintf(log,"Player %d:",pl+1);
+
+        // sec=1 for cards
+
+
+        if(sec==1)
+        {
+            sprintf(content,"Player %d:",pl+1);
+            for(j=0;j<t->next->card_num;j++)
+            {
+                //printf("%d\n",t->next->card[j]);
+                tell_card(t->next->card[j],log);
+                disp_card(t->next->card[j],windows,200+j%7*200, sum+100+floor(j/7)*200,fixed,-1,NULL);
+            }
+            sum+=floor(j/7)*200+200;
+            printf("\n");
+            if(log!=NULL)
+                fprintf(log,"\n");
+
+        }
+        // sec=2 for score
+        if(sec==2)
+        {
+            rem=t->next->card_num;
+            score[pl]+=-rem;
+            printf("%d, ",-rem);
+            printf("total: %d\n",score[pl]);
+            sprintf(content,"Player %d:%d, total: %d\n",pl+1,-rem,score[pl]);
+            if(log!=NULL)
+            {
+                fprintf(log,"%d, ",-rem);
+                fprintf(log,"total: %d\n",score[pl]);
+            }
+            sum+=50;
+        }
+        label= gtk_label_new("Result");
+        gtk_fixed_put(GTK_FIXED(fixed), label,0 , 0);
+        gtk_widget_set_size_request(label, 80, 35);
+
+        label= gtk_label_new(content);
+        gtk_fixed_put(GTK_FIXED(fixed), label,0, sum);
+        gtk_widget_set_size_request(label, 150, 35);
+        move(t,dir);
+        pl++;
+        if(pl<=0)
+            pl+=n;
+        if(pl>=n)
+            pl-=n;
+    }while(t->next!=temp);
+    printf("\n");
+    if(log!=NULL)
+        fprintf(log,"\n");
+
+}
+#endif
 void clear_table(table *t)
 {
     do{
@@ -291,4 +363,22 @@ void ask_command(FILE *log)
 {
     getchar();
    // printf("%c",8);
+}
+
+/***
+* document score part
+ *
+*/
+
+void create_score(char* file_name,int score[],int pl){
+    FILE *log=fopen(file_name,"w");
+    if(log==NULL){
+        fprintf(stderr,"Error#001:Unable to open file %s",file_name);
+        exit(EXIT_FAILURE);
+    }
+    for(int i =0;i<pl;i++)
+    {
+        fprintf(log,"Player %d Score : %d \n",i+1,score[i]);
+    }
+    fclose(log);
 }

@@ -8,8 +8,12 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "card_pile.h"
 #include <getopt.h>
+
+#include "GTK_ENABLED.h"
+#ifdef GTK
+#include "gtk/gtk.h"
+#endif
 
 /*
  *  detect environment
@@ -27,7 +31,7 @@
 #define get_suits(x)    (int)floor((x)/13)
 #define get_rank(x)     (int)((x)-13*get_suits(x))
 
-void game(int r, int d, int num, int c, FILE *log);
+
 int cmpf (const void * a, const void * b);
 /**
  * intro setting
@@ -78,11 +82,17 @@ typedef struct{
 }game_status;
 
 void init_table(table *t);
+#ifndef GTK
 void read_table(table *t,int dir,FILE *log,int sec,int *score);
+#endif
+#ifdef GTK
+
+void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,int sec,int *score);
+#endif
 void clear_table(table *t);
 int table_empty(table *t);
 int move(table *t,int dir);
-table init_order(table *t,pile *disc_pile,FILE *log);
+
 
 
 
@@ -96,7 +106,7 @@ int delete_card(player *pl,int pos);
 /***
  *
  */
-
+void create_score(char* file_name,int score[],int pl);
 
 void ask_command(FILE *log);
 #endif //P2_1_BASIC_PROPERTY_H
