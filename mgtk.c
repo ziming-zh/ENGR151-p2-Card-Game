@@ -12,7 +12,8 @@ void disp_start(GtkWidget* widget, gpointer pt)
 {
     // printf equivalent in GTK+
 
-
+    if(widget==NULL){}
+    if(pt==NULL){}
 
 
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -37,17 +38,25 @@ void disp_start(GtkWidget* widget, gpointer pt)
 
 void destroy(GtkWidget* widget, gpointer data)
 {
+    if(widget==NULL){}
+    if(data==NULL){}
     gtk_main_quit();
 }
 void wquit(GtkWidget* widget, gpointer window)
 {
+    if(widget==NULL){}
+
     gtk_widget_destroy((GtkWidget*)window);
 }
 
 void disp_score(GtkWidget* widget, gpointer data)
 {
+    if(widget==NULL){}
+    if(data==NULL){}
+
     FILE *log;
     char line[30];
+
     GtkWidget *fixed=gtk_fixed_new();
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GtkWidget *quit;
@@ -56,6 +65,10 @@ void disp_score(GtkWidget* widget, gpointer data)
 
 
     log= fopen("score.log","r");
+    if(log==NULL){
+		fprintf(stderr,"Error#001 Cannot Open File. The Game will quit.\n"); 
+		exit(-1);
+	}
     int counter=1;
     while(fgets(line,30,log)!=NULL){
         GtkWidget *label= gtk_label_new(line);
@@ -73,6 +86,8 @@ void disp_score(GtkWidget* widget, gpointer data)
     gtk_widget_show_all(window);
 }
 void plus_info(GtkWidget* widget, gpointer data){
+    if(widget==NULL){}
+
     setting_data *data1=(setting_data*) data;
     char v[10];
     int i;
@@ -110,6 +125,7 @@ void minus_info(GtkWidget* widget, gpointer data){
 }
 void disp_setting(GtkWidget* widget, gpointer pt)
 {
+    if(widget==NULL){}
         /***
          * basic properties
          * gtk_disp on/off
@@ -218,6 +234,10 @@ void fetch_setting(gpointer data){
     FILE *set;
     setting_data *data1=(setting_data*) data;
     set=fopen(data1->path,"r");
+    if(set==NULL){
+		fprintf(stderr,"Error#001 Cannot Open File. The Game will quit.\n"); 
+		exit(-1);
+	}
     fscanf(set,"%d",&data1->num);
     fscanf(set,"%d",&data1->c);
     fscanf(set,"%d",&data1->r);
@@ -225,9 +245,14 @@ void fetch_setting(gpointer data){
     fclose(set);
 }
 void save_setting(GtkWidget* widget, gpointer data){
+    if(widget==NULL){}
     setting_data *data1=(setting_data*) data;
     FILE *set;
     set=fopen(data1->path,"w");
+    if(set==NULL){
+		fprintf(stderr,"Error#001 Cannot Open File. The Game will quit.\n"); 
+		exit(-1);
+	}
     fprintf(set,"%d\n%d\n%d\n%d\n",data1->num,data1->c,data1->r,data1->d);
     fclose(set);
 }
@@ -238,7 +263,7 @@ void save_setting(GtkWidget* widget, gpointer data){
  * @param window
  */
 
-void disp_card(int num,GtkWidget *window,int x,int y,GtkWidget *fixed,int id,animation_data* data1){
+void disp_card(int num,int x,int y,GtkWidget *fixed,int id,animation_data* data1){
     gchar filename[30];
     GtkWidget *act_card;
 
@@ -267,9 +292,8 @@ void select_card(GtkWidget *widget,gpointer pt){
 
     GtkWidget *label;
     GtkWidget *fixed=data1->fixed;
-    GtkWidget *window=data1->windows;
     GtkWidget *button;
-    int j=0;
+    int j;
     for(j=0;j<data1->t->next->card_num;j++)
         if(data1->cardpt[j]==widget)
             break;
@@ -303,6 +327,7 @@ void select_card(GtkWidget *widget,gpointer pt){
     }
 }
 void confirm_card(GtkWidget *widget,gpointer pt){
+    if(widget==NULL){}
     animation_data *data1=(animation_data*)pt;
     GtkWidget *fixed =data1->fixed;
     GtkWidget *window=data1->windows;
@@ -321,8 +346,8 @@ void confirm_card(GtkWidget *widget,gpointer pt){
     printf("Player %d plays:",data1->pl);
     if(log!=NULL)
         fprintf(log,"Player %d plays:",data1->pl);
-    tell_card(data1->nxt,log);
-    disp_card(data1->nxt,window,400,300,fixed,-1,NULL);
+    tell_card(data1->nxt,log,1);
+    disp_card(data1->nxt,400,300,fixed,-1,NULL);
 
     printf("\n");
     if(log!=NULL)
@@ -343,17 +368,11 @@ void confirm_card(GtkWidget *widget,gpointer pt){
         data1->fixed=fixed;
         int **card=data1->cards;
         int num=data1->num;
-        int c=data1->c;
-        int d=data1->d;
-        int r=data1->r;
+
         int *score=data1->score;
         pile* dock_pile=data1->dock_pile;
         pile* disc_pile=data1->disc_pile;
         table *t=data1->t;
-        FILE *log=data1->log;
-        game_status *st=data1->st;
-
-
 
         /**
          * Game Ended!
@@ -367,7 +386,7 @@ void confirm_card(GtkWidget *widget,gpointer pt){
         if(log!=NULL)
             fprintf(log,"---- Stats ----\n"
                         "Round result:\n");
-        read_table(window,fixed,t,1,log,2,score);
+        read_table(window,fixed,t,1,log,2,score,1);
         create_score("score.log",score,num);
         printf("Round ends.\n\n");
         if(log!=NULL)
@@ -399,7 +418,7 @@ void confirm_card(GtkWidget *widget,gpointer pt){
         gtk_fixed_put(GTK_FIXED(fixed), label,50 , 0);
         gtk_widget_set_size_request(label, 300, 35);
 
-        disp_card(data1->nxt,window,400,300,fixed,-1,NULL);
+        disp_card(data1->nxt,400,300,fixed,-1,NULL);
         button= gtk_button_new_with_label("Continue");
         gtk_fixed_put(GTK_FIXED(fixed), button,600 , 800);
         gtk_widget_set_size_request(button, 100, 35);
@@ -412,7 +431,7 @@ void confirm_card(GtkWidget *widget,gpointer pt){
 }
 void act_status(GtkWidget *widget,gpointer pt)
 {
-
+    if(widget==NULL){}
     animation_data *data1=(animation_data*)pt;
     gtk_widget_destroy(data1->fixed);
     GtkWidget *fixed=gtk_fixed_new();
@@ -447,8 +466,8 @@ void act_status(GtkWidget *widget,gpointer pt)
         int add;
         for(j=0;j<st->effect;j++){
             add = pull_card(data1->dock_pile, data1->disc_pile, data1->card_counter, 0,log);
-            tell_card(add,log);
-            disp_card(add,window,j%7*200+200, 100+floor(j/7)*200,fixed,-1,NULL);
+            tell_card(add,log,1);
+            disp_card(add,j%7*200+200, (int)(100+floor(j/7)*200),fixed,-1,NULL);
             add_card(t->next,add);
         }
         printf("\n");
@@ -468,8 +487,8 @@ void act_status(GtkWidget *widget,gpointer pt)
         fprintf(log,"Player %d cards:",data1->pl);
     for(j=0;j<t->next->card_num;j++)
     {
-        tell_card(t->next->card[j],log);
-        disp_card(t->next->card[j],window,j%7*200+200, 500+floor(j/7)*200,fixed,-1,NULL);
+        tell_card(t->next->card[j],log,1);
+        disp_card(t->next->card[j],j%7*200+200, (int)(500+floor(j/7)*200),fixed,-1,NULL);
     }
     printf("\n");
     if(log!=NULL)
@@ -490,6 +509,8 @@ void act_status(GtkWidget *widget,gpointer pt)
 }
 
 void prepare_for_next(GtkWidget *widget,gpointer pt){
+    if(widget==NULL){}
+
     animation_data *data1=(animation_data*) pt;
     gtk_widget_destroy(data1->fixed);
     GtkWidget *fixed=gtk_fixed_new();
@@ -509,8 +530,8 @@ void prepare_for_next(GtkWidget *widget,gpointer pt){
     printf("the previously played card (");
     if(log!=NULL)
         fprintf(log,"# clear screen here for a real game and show the previously played card (");
-    tell_card(data1->nxt,log);
-    disp_card(data1->nxt,window,400,300,fixed,-1,NULL);
+    tell_card(data1->nxt,log,1);
+    disp_card(data1->nxt,400,300,fixed,-1,NULL);
     gtk_widget_show_all(fixed);
     printf(")\n");
     if(log!=NULL)
@@ -548,7 +569,7 @@ void init_ggame(GtkWidget *window){
     GtkWidget  *Game_Name;
     GtkWidget  *fixed=gtk_fixed_new();
 
-    static setting_data data1={0,4,5,2,1,{NULL,NULL,NULL,NULL},"setting.log"};
+    static setting_data data1={0,4,5,2,1,{NULL,NULL,NULL,NULL},.path="setting.log"};
     gpointer pt=&data1;
     gtk_container_add(GTK_CONTAINER(window), fixed);
     Game_Name=gtk_label_new("Onecard");
@@ -579,9 +600,7 @@ void game(animation_data *data1)
 {
     GtkWidget *window = data1->windows;
     int num=data1->num;
-    int c=data1->c;
     int d=data1->d;
-    int r=data1->r;
     FILE *log=data1->log;
     GtkWidget *label;
     GtkWidget *button;
@@ -589,10 +608,10 @@ void game(animation_data *data1)
     data1->fixed=fixed;
     //initial setup
 
-    int dir=1;//originally turning counter-clock wise
+
     //card_counter is a container that will automatically fill every time there is s reshuffle
-    int cur_r;
-    int i,pl;//temp
+
+    int i;//temp
 
     static int *score;
 
@@ -611,7 +630,11 @@ void game(animation_data *data1)
 
     t.n=num;
     t.win=1;
-    score=malloc(num*sizeof(int));
+    score=malloc((size_t)num*sizeof(int));
+    if(score==NULL){
+        fprintf(stderr,"Cannot allocate memory\n.");
+        exit(1);
+    }
     data1->score=score;
     for(i=0;i<num;i++)
         score[i]=0;
@@ -653,6 +676,8 @@ void game(animation_data *data1)
 
 void deal_cards(GtkWidget* widget, gpointer pt)
 {
+    if(widget==NULL){}
+
     animation_data *data1=(animation_data*) pt;
     GtkWidget *window=data1->windows;
     GtkWidget *button;
@@ -665,8 +690,6 @@ void deal_cards(GtkWidget* widget, gpointer pt)
     int **card;
     int num=data1->num;
     int c=data1->c;
-    int d=data1->d;
-    int r=data1->r;
     int *score=data1->score;
     pile* dock_pile=data1->dock_pile;
     pile* disc_pile=data1->disc_pile;
@@ -684,24 +707,32 @@ void deal_cards(GtkWidget* widget, gpointer pt)
     /**
      * initializing personal card
      */
-    card=(int**)malloc(sizeof(int*)*num);
+    card=(int**)malloc(sizeof(int*)*(size_t)num);
+    if(card==NULL){
+        fprintf(stderr,"Cannot allocate memory\n.");
+        exit(1);
+    }
     data1->cards= card;
     for(pl=0;pl<num;pl++)
     {
-        card[pl]=(int*)malloc(c*sizeof(int));
+        card[pl]=(int*)malloc((size_t)c*sizeof(int));
+        if(card[pl]==NULL){
+            fprintf(stderr,"Cannot allocate memory\n.");
+            exit(1);
+        }
         //begin=temp;
         for(i=0;i<c+1;i++)
         {
             card[pl][i]=pull_card(dock_pile,disc_pile,data1->card_counter,1,log);
             push_card(disc_pile,card[pl][i]);
         }
-        qsort(card[pl],c+1,sizeof(int),cmpf);
+        qsort(card[pl],(size_t)c+1,sizeof(int),cmpf);
         add_player(t,init_player(c,card[pl],(score[pl])),dir);
     }
     if(log!=NULL)
         fprintf(log,"\n# only display current user for a real game, server and demo mode show all players\n");
     move(t,-dir);
-    read_table(window,fixed,t,dir,log,1,NULL);
+    read_table(window,fixed,t,dir,log,1,NULL,1);
 
     printf("Determining the playing order...\n");
     if(log!=NULL)
@@ -729,55 +760,5 @@ void deal_cards(GtkWidget* widget, gpointer pt)
     g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(set_up_animation),data1);
 }
 
-void ganimation(GtkWidget* widget, gpointer pt){
-    /**
-     * Game Starts!
-     */
-    animation_data *data1=(animation_data*) pt;
-    GtkWidget *window=data1->windows;
-    GtkWidget *button;
-    GtkWidget *fixed =data1->fixed;
-    gtk_widget_destroy(fixed);
-    fixed=gtk_fixed_new();
-    data1->fixed=fixed;
-    int **card=data1->cards;
-    int num=data1->num;
-    int c=data1->c;
-    int d=data1->d;
-    int r=data1->r;
-    int *score=data1->score;
-    pile* dock_pile=data1->dock_pile;
-    pile* disc_pile=data1->disc_pile;
-    table *t=data1->t;
-    FILE *log=data1->log;
-    game_status *st=data1->st;
-    int i,pl;
-
-
-    /**
-     * Game Ended!
-     */
-
-    /***
-     * displaying the scores of every player
-     */
-    printf("---- Stats ----\n"
-           "Round result:\n");
-    if(log!=NULL)
-        fprintf(log,"---- Stats ----\n"
-                    "Round result:\n");
-    read_table(window,fixed,t,1,log,2,score);
-    create_score("score.log",score,pl);
-    printf("Round ends.\n\n");
-    if(log!=NULL)
-        fprintf(log,"Round ends.\n\n");
-
-    ///clear all the memory
-    free(card);
-    clear_table(t);
-    clear_pile(dock_pile);
-    clear_pile(disc_pile);
-
-}
 
 #endif

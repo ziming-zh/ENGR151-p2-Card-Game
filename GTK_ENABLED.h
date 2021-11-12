@@ -4,5 +4,5 @@
 
 #ifndef P2_1_GTK_ENABLED_H
 #define P2_1_GTK_ENABLED_H
-#define GTK
+//#define GTK
 #endif //P2_1_GTK_ENABLED_H

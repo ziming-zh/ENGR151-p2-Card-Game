@@ -4,7 +4,6 @@
 #include "card_pile.h"
 #include "basic.h"
 #include "animation.h"
-#include "GTK_ENABLED.h"
 #include "log.h"
 
 
@@ -38,7 +37,11 @@ void game(int r,int d,int num,int c,FILE* log)
 
     t.n=num;
     t.win=1;
-    score=malloc(num*sizeof(int));
+    score=malloc((size_t)num*sizeof(int));
+    if(score==NULL){
+        fprintf(stderr,"Cannot allocate memory\n.");
+        exit(1);
+    }
     for(i=0;i<num;i++)
         score[i]=0;
     for(cur_r=1;cur_r<=r;cur_r++)
@@ -70,23 +73,31 @@ void game(int r,int d,int num,int c,FILE* log)
         /**
          * initializing personal card
          */
-        card=(int**)malloc(sizeof(int*)*num);
+        card=(int**)malloc(sizeof(int*)*(size_t)num);
+        if(card==NULL){
+            fprintf(stderr,"Cannot allocate memory\n.");
+            exit(1);
+        }
         for(pl=0;pl<num;pl++)
         {
-            card[pl]=(int*)malloc(c*sizeof(int));
+            card[pl]=(int*)malloc((size_t)c*sizeof(int));
+            if(card[pl]==NULL){
+                fprintf(stderr,"Cannot allocate memory\n.");
+                exit(1);
+            }
             //begin=temp;
             for(i=0;i<c+1;i++)
             {
                 card[pl][i]=pull_card(&dock_pile,&disc_pile,card_counter,1,log);
                 push_card(&disc_pile,card[pl][i]);
             }
-            qsort(card[pl],c+1,sizeof(int),cmpf);
+            qsort(card[pl],(size_t)c+1,sizeof(int),cmpf);
             add_player(&t,init_player(c,card[pl],score[pl]),dir);
         }
         if(log!=NULL)
             fprintf(log,"\n# only display current user for a real game, server and demo mode show all players\n");
         move(&t,-dir);
-        read_table(&t,dir,log,1,NULL);
+        read_table(&t,dir,log,1,NULL,0);
         printf("Determining the playing order...\n");
         if(log!=NULL)
             fprintf(log,"Determining the playing order...\n");
@@ -114,7 +125,7 @@ void game(int r,int d,int num,int c,FILE* log)
         if(log!=NULL)
             fprintf(log,"---- Stats ----\n"
                         "Round %d result:\n",cur_r);
-        read_table(&t,1,log,2,score);
+        read_table(&t,1,log,2,score,1);
         create_score("score.log",score,pl);
         printf("Round %d ends.\n\n",cur_r);
         if(log!=NULL)
@@ -132,7 +143,7 @@ void game(int r,int d,int num,int c,FILE* log)
 #endif
 
 
-int main(int argc, char *argv[])
+void init_start(int argc, char *argv[])
 {
     int option;
     char *arg;
@@ -165,10 +176,26 @@ int main(int argc, char *argv[])
             case 'r': arg=optarg;   sscanf(arg,"%d",&r);    printf("<round> %d\n",r); break;
             case 'd': arg=optarg;   sscanf(arg,"%d",&d);    printf("<deck> %d\n",d);  break;
             case 'a': read_log("demo.log"); break;
-            case 'l': arg=optarg;   printf("Creating Log\n"); log=create_log(arg,log);  break;//ban the gtk_mode
+            case 'l': {
+                arg=optarg;
+
+                printf("Creating Log\n");
+                log=create_log(arg,log);
+                break;
+            }
             default:;
         }
     }
+    printf("########################\n"
+           "#                      #\n"
+           "# Welcome to One Card! #\n"
+           "#                      #\n"
+           "########################\n");
+    printf("---- Initial setup ----\n"
+                "Number of rounds: %d\n"
+                "Number of decks: %d\n"
+                "Number of players: %d\n"
+                "Initial number of cards offered to each player:%d\n",r,d,num,c);
     if(log!=NULL)
         fprintf(log,"---- Initial setup ----\n"
                     "Number of rounds: %d\n"
@@ -203,4 +230,9 @@ int main(int argc, char *argv[])
 #endif
 
     close_log(log);
+}
+int main(int argc,char *argv[])
+{
+    init_start(argc,argv);
+    return 0; 
 }

@@ -36,7 +36,7 @@ void read_pile(GtkWidget *windows,GtkWidget *fixed,pile *q,FILE* log,int n);
 void push_card(pile *q,int new_card);
 int pull_card(pile *q,pile *disc,int* counter,int state,FILE *log);//a very good strategy is to embed the pile_empty detection into the pull_card function since every time we pull a card, we need to check the validity
 void clear_pile(pile *q);
-void tell_card(int x,FILE *log); //tell the suit and rank of the card
+void tell_card(int x,FILE *log,int state); //tell the suit and rank of the card
 void shuffle_card(int card_counter[],pile* P);
 table init_order(table *t,pile *disc_pile,FILE *log);
 

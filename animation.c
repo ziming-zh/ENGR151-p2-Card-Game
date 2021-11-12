@@ -66,7 +66,7 @@ void change_status(game_status *st,int cur,int nxt){
      {
          init_status(st);
      }
-     else if(n_rank==11 || n_rank==12) // Q/K
+     else if(n_rank==11 || n_rank==10) // Q/K
      {
          if(n_rank==11)
          {
@@ -84,7 +84,7 @@ void change_status(game_status *st,int cur,int nxt){
 
 int card_available(int cur,player *pl,game_status* st)
 {
-    int i=0;
+    int i;
     int states=0;
     int r;
     int c_rank= get_rank(cur);
@@ -123,17 +123,16 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
     int add;
     int n=t->n;
     int j = 0;
-
     int result=0;
     ask_command(log);
 #ifdef WIN32
-    system("clear");
+    if(system("clear")){}
 #endif
 #ifdef WIN64
-    system("clear");
+    if(system("clear")){}
 #endif
 #ifdef linux
-    system("cls");
+    if(system("cls")){}
 #endif
     printf("---- Game start ----\n");
     if(log!=NULL)
@@ -142,7 +141,7 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
     printf("First card:");
     if(log!=NULL)
         fprintf(log,"First card:");
-    tell_card(cur,log);
+    tell_card(cur,log,1);
     printf("\n");
     if(log!=NULL)
         fprintf(log,"\n");
@@ -156,6 +155,7 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
             if(!card_available(cur,t->next,st) || st->forced)
             {
                 printf("Sorry, but it seems that you cannot play any cards now. Now draw cards from the pile\n");
+
                 st->draw=1;
                 st->forced=0;
                 nxt=cur;
@@ -166,10 +166,10 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
                     printf("Chose your card from your card pile below:\n");
                     for(j=0;j<t->next->card_num;j++)
                     {
-                        tell_card(t->next->card[j],NULL);
+                        tell_card(t->next->card[j],NULL,1);
                     }
                     printf("\nNO. of cards(count from left):");
-                    scanf("%d",&j);
+                    if(scanf("%d",&j)){}
                     if(j>t->next->card_num){
                         printf("Invalid card number. Please input again!\n");
                         st->invalid=1;
@@ -183,7 +183,7 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
                 printf("Player %d plays:",pl);
                 if(log!=NULL)
                     fprintf(log,"Player %d plays:",pl);
-                tell_card(nxt,log);
+                tell_card(nxt,log,1);
                 printf("\n");
                 if(log!=NULL)
                     fprintf(log,"\n");
@@ -215,7 +215,7 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
                     fprintf(log,"Player %d draws:",pl);
                 for(j=0;j<st->effect;j++){
                     add = pull_card(dock_pile, disc_pile, counter, 0,log);
-                    tell_card(add,log);
+                    tell_card(add,log,1);
                     add_card(t->next,add);
                 }
                 printf("\n");
@@ -226,12 +226,12 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
                 st->under_attack=0;
             }
             ///display the remaining card of the player
-            printf("Player %d cards:",pl);
+            printf("\n\nPlayer %d cards:",pl);
             if(log!=NULL)
                 fprintf(log,"Player %d cards:",pl);
             for(j=0;j<t->next->card_num;j++)
             {
-                tell_card(t->next->card[j],log);
+                tell_card(t->next->card[j],log,1);
             }
             printf("\n");
             if(log!=NULL)
@@ -245,14 +245,23 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
 
             //display the attribute effect of the player if there is one
 
-
+            getchar();
+            getchar();
+            //wait for display
             //clear screen
-            system("clear");
-            system("cls");
+#ifdef WIN32
+            if(system("clear")){}
+#endif
+#ifdef WIN64
+            if(system("clear")){}
+#endif
+#ifdef linux
+            if(system("cls")){}
+#endif
             printf("the previously played card (");
             if(log!=NULL)
                 fprintf(log,"# clear screen here for a real game and show the previously played card (");
-            tell_card(nxt,log);
+            tell_card(nxt,log,1);
             printf(")\n");
             if(log!=NULL)
                 fprintf(log,")\n");
@@ -276,6 +285,8 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
 #endif
 #ifdef GTK
 void set_up_animation(GtkWidget *widget,gpointer pt){
+    if(widget==NULL){}
+
     animation_data *data1=(animation_data*)pt;
     GtkWidget *window=data1->windows;
     GtkWidget *button;
@@ -303,8 +314,8 @@ void set_up_animation(GtkWidget *widget,gpointer pt){
     printf("First card:");
     if(log!=NULL)
         fprintf(log,"First card:");
-    tell_card(data1->cur,log);
-    disp_card(data1->cur,window,400,300,fixed,-1,NULL);
+    tell_card(data1->cur,log,1);
+    disp_card(data1->cur,400,300,fixed,-1,NULL);
     printf("\n");
     if(log!=NULL)
         fprintf(log,"\n");
@@ -318,7 +329,8 @@ void set_up_animation(GtkWidget *widget,gpointer pt){
 }
 void animation(GtkWidget *widget,gpointer pt)
 {
-    int i;
+    if(widget==NULL){}
+
     animation_data *data1=(animation_data*)pt;
     ///get a card from the top of the pile
     GtkWidget *window=data1->windows;
@@ -329,21 +341,12 @@ void animation(GtkWidget *widget,gpointer pt)
     fixed=gtk_fixed_new();
     data1->fixed=fixed;
     gtk_container_add(GTK_CONTAINER(window),fixed);
-    int **card=data1->cards;
-    int n=data1->num;
-    int c=data1->c;
-    int d=data1->d;
-    int r=data1->r;
-    int *score=data1->score;
-    pile* dock_pile=data1->dock_pile;
-    pile* disc_pile=data1->disc_pile;
+
     table *t=data1->t;
-    FILE *log=data1->log;
     game_status *st=data1->st;
     char words[30];
-    int j = 0;
+    int j;
 
-    int result=0;
     sprintf(words,"player %d",data1->pl);
     label= gtk_label_new("Game Start");
     gtk_fixed_put(GTK_FIXED(fixed), label,0 , 0);
@@ -377,8 +380,8 @@ void animation(GtkWidget *widget,gpointer pt)
         printf("Chose your card from your card pile below:\n");
         for(j=0;j<t->next->card_num;j++)
         {
-            tell_card(t->next->card[j],NULL);
-            disp_card(t->next->card[j],window,j%7*200+200, 100+floor(j/7)*200,fixed,j,data1);
+            tell_card(t->next->card[j],NULL,1);
+            disp_card(t->next->card[j],j%7*200+200, (int)(100+floor(j/7)*200),fixed,j,data1);
         }
         printf("\nNO. of cards(count from left):");
         /***
@@ -423,7 +426,7 @@ void check_valid(){
             int add;
             for(j=0;j<st->effect;j++){
                 add = pull_card(dock_pile, disc_pile, data1->card_counter, 0,log);
-                tell_card(add,log);
+                tell_card(add,log,1);
                 add_card(t->next,add);
             }
             printf("\n");
@@ -439,7 +442,7 @@ void check_valid(){
             fprintf(log,"Player %d cards:",data1->pl);
         for(j=0;j<t->next->card_num;j++)
         {
-            tell_card(t->next->card[j],log);
+            tell_card(t->next->card[j],log,1);
         }
         printf("\n");
         if(log!=NULL)
@@ -458,7 +461,7 @@ void check_valid(){
         printf("the previously played card (");
         if(log!=NULL)
             fprintf(log,"# clear screen here for a real game and show the previously played card (");
-        tell_card(data1->nxt,log);
+        tell_card(data1->nxt,log,1);
         printf(")\n");
         if(log!=NULL)
             fprintf(log,")\n");

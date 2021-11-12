@@ -2,9 +2,12 @@
 // Created by Ziming on 2021/10/12.
 //
 #include "basic.h"
-#include "mgtk.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "card_pile.h"
+#ifdef GTK
+#include "mgtk.h"
+#endif 
 
 int cmpf (const void * a, const void * b)
 {
@@ -12,7 +15,7 @@ int cmpf (const void * a, const void * b)
 }
 void print_help(void)
 {
-    int o;
+    char o;
     printf("-h|--help print this help message\n"
            "--log filename write the logs in filename (default: onecard.log)\n"
            "-n n|--player-number=n n players, n must be larger than 2 (default: 4)\n"
@@ -21,7 +24,7 @@ void print_help(void)
            "-r r|--rounds=r play r rounds, r must be at least 1 (default: 1)\n"
            "-a|--auto run in demo mode\n");
     printf("Now Start the game or not <y/n>:");
-    scanf("%c",&o);
+    if(scanf("%c",&o)){}
     if(o!='y')  exit(EXIT_SUCCESS);
 }
 
@@ -30,7 +33,7 @@ void init_table(table *t)
     t->pre=t->next=t->head=NULL;
 }
 #ifndef GTK
-void read_table(table *t,int dir,FILE *log,int sec,int *score)
+void read_table(table *t,int dir,FILE *log,int sec,int *score,int state)
 {
 
     player *temp=t->next;
@@ -38,8 +41,8 @@ void read_table(table *t,int dir,FILE *log,int sec,int *score)
     int n=t->n;
     int rem,j;
     do{
-
-        printf("Player %d:",pl+1);
+        if(state)
+            printf("Player %d:",pl+1);
         if(log!=NULL)
             fprintf(log,"Player %d:",pl+1);
         // sec=1 for cards
@@ -48,9 +51,10 @@ void read_table(table *t,int dir,FILE *log,int sec,int *score)
             for(j=0;j<t->next->card_num;j++)
             {
                 //printf("%d\n",t->next->card[j]);
-                tell_card(t->next->card[j],log);
+                tell_card(t->next->card[j],log,state);
             }
-            printf("\n");
+            if(state)
+                printf("\n");
             if(log!=NULL)
                 fprintf(log,"\n");
         }
@@ -81,8 +85,10 @@ void read_table(table *t,int dir,FILE *log,int sec,int *score)
 }
 #endif
 #ifdef GTK
-void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,int sec,int *score)
+void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,int sec,int *score,int state)
 {
+    if(windows==NULL){}
+
     GtkWidget *label;
 
     char content[40];
@@ -92,8 +98,8 @@ void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,i
     int rem,j;
     int sum=100;
     do{
-
-        printf("Player %d:",pl+1);
+        if(state)
+            printf("Player %d:",pl+1);
         if(log!=NULL)
             fprintf(log,"Player %d:",pl+1);
 
@@ -106,11 +112,12 @@ void read_table(GtkWidget *windows,GtkWidget *fixed,table *t,int dir,FILE *log,i
             for(j=0;j<t->next->card_num;j++)
             {
                 //printf("%d\n",t->next->card[j]);
-                tell_card(t->next->card[j],log);
-                disp_card(t->next->card[j],windows,200+j%7*200, sum+100+floor(j/7)*200,fixed,-1,NULL);
+                tell_card(t->next->card[j],log,state);
+                disp_card(t->next->card[j],200+j%7*200, (int)(sum+100+floor(j/7)*200),fixed,-1,NULL);
             }
-            sum+=floor(j/7)*200+200;
-            printf("\n");
+            sum+=(int)(floor(j/7)*200+200);
+            if(state)
+                printf("\n");
             if(log!=NULL)
                 fprintf(log,"\n");
 
@@ -196,7 +203,7 @@ table init_order(table *t,pile* disc_pile,FILE *log)
         printf("Player %d:",pl);
         if(log!=NULL)
             fprintf(log,"Player %d:",pl);
-        tell_card(cur,log);
+        tell_card(cur,log,1);
         printf("\n");
         if(log!=NULL)
             fprintf(log,"\n");
@@ -231,6 +238,10 @@ void add_player(table *t,player_info pinf,int dir)
 {
     player *pl;
     pl=(player*)malloc(sizeof(player));
+    if(pl==NULL){
+        fprintf(stderr,"Cannot allocate memory\n.");
+        exit(1);
+    }
     pl->card=(pinf).card;
     pl->card_num=(pinf).card_num;
     pl->move=(pinf).move;
@@ -263,8 +274,8 @@ void add_player(table *t,player_info pinf,int dir)
 }
 player_info delete_player(table *t,int dir)
 {
-    player_info pinf;
-    player *pl;
+    player_info pinf={NULL,0,0,0};
+    player *pl=NULL;
     if(table_empty(t))
     {
         fprintf(stderr,"Error#112: No Participants Involved. Cannot delete the player.\n");
@@ -316,11 +327,11 @@ player_info delete_player(table *t,int dir)
 void add_card(player *pl,int card)
 {
 
-    pl->card= realloc(pl->card,sizeof(int)*(pl->card_num+1));
+    pl->card= realloc(pl->card,sizeof(int)*(size_t)(pl->card_num+1));
     pl->card[pl->card_num]=card;
 
     pl->card_num+=1;
-    qsort(pl->card,pl->card_num,sizeof(int),cmpf);
+    qsort(pl->card,(size_t)pl->card_num,sizeof(int),cmpf);
 //    for(i=0;i<pl->card_num;i++)//insert
 //    {
 //        printf("%d ",pl->card[i]);
@@ -361,6 +372,7 @@ int read_card(player *pl,int pos)
 
 void ask_command(FILE *log)
 {
+    if(log==NULL){}
     getchar();
    // printf("%c",8);
 }

@@ -35,10 +35,10 @@ void read_log(char* file_name)
     int i;
     char o;
     log=fopen(file_name,"r");
-    fgets(line,MAX_LINE_NUM,log);
-    fgets(line,MAX_LINE_NUM,log);
-    fgets(line,MAX_LINE_NUM,log);
-    fgets(line,MAX_LINE_NUM,log);
+    if(fgets(line,MAX_LINE_NUM,log)){}
+    if(fgets(line,MAX_LINE_NUM,log)){}
+    if(fgets(line,MAX_LINE_NUM,log)){}
+    if(fgets(line,MAX_LINE_NUM,log)){}
 
     if(log==NULL){
         fprintf(stderr,"Error#001:Unable to open file %s",file_name);
@@ -47,7 +47,7 @@ void read_log(char* file_name)
     printf("This is a demo for the card game. You can continue pressing enter to see the whole process of the game.\n");
     while(fgets(line,MAX_LINE_NUM,log)!=NULL)
     {
-        for(i=0;i<strlen(line);i++)
+        for(i=0;i<(int)strlen(line);i++)
         {
             if(line[i]=='#'){ ask_command(log); break;}
             printf("%c",line[i]);
@@ -55,6 +55,6 @@ void read_log(char* file_name)
         printf("\n");
     }
     printf("Now Start the game or not <y/n>:");
-    scanf("%c",&o);
+    if(scanf("%c",&o)){}
     if(o!='y')  exit(EXIT_SUCCESS);
 }

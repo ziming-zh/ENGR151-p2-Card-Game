@@ -45,13 +45,12 @@ typedef struct _animation_data{
     int nxt;
     int add;
     int result;
-    int id;
     int j;// for position
 
 
 }animation_data;
 
-void disp_card(int num,GtkWidget *window,int x,int y,GtkWidget *fixed,int id,animation_data* data);
+void disp_card(int num,int x,int y,GtkWidget *fixed,int id,animation_data* data);
 void disp_start(GtkWidget* widget, gpointer data);
 void destroy(GtkWidget* widget, gpointer data);
 void wquit(GtkWidget* widget, gpointer window);
@@ -63,7 +62,6 @@ void fetch_setting(gpointer data);
 void game(animation_data *data);
 void select_card(GtkWidget *widget,gpointer pt);
 void deal_cards(GtkWidget* widget, gpointer pt);
-void ganimation(GtkWidget* widget, gpointer pt);
 void confirm_card(GtkWidget *widget,gpointer pt);
 void act_status(GtkWidget *window,gpointer pt);
 void prepare_for_next(GtkWidget *window,gpointer pt);

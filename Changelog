@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2021-11-12
+
+### Added
+- Add chapter "Project Structure" in README file which explicates the brief function of each file
+- Add headline "p2m3 has finished" in README file
+
+## [0.2.3] - 2021-11-12
+
+### Added
+- Add chapter "About the advanced-mode project (with GTK support)" in README file which introduces the bonus part of the project with GTK support
+- Update the CHANGELOG to record changes made to the project
+- Indent all codes
+
+## [0.2.2] - 2021-11-11
+
+### Edited
+-Revise the code so that it could pass the JOJ compilation test
+
+### Removed
+- Remove unnecessary annoatation in the project
+
+## [0.2.1] - 2021-11-10
+
+### Added
+- Add chapter "About the simple-mode project (without GTK support)" in README file which introduces the functioning of the project without GTK
+
+### Removed
+- Remove printing of the shuffling result and the dealing result to each player
+
+
 ## [0.1.2] - 2021-11-7
 
 ### Changed

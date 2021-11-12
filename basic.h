@@ -83,7 +83,7 @@ typedef struct{
 
 void init_table(table *t);
 #ifndef GTK
-void read_table(table *t,int dir,FILE *log,int sec,int *score);
+void read_table(table *t,int dir,FILE *log,int sec,int *score,int state);
 #endif
 #ifdef GTK
 
