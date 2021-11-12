@@ -1,0 +1,99 @@
+########################
+# #
+# Welcome to One Card! #
+# #
+########################
+---- Initial setup ----
+Number of rounds: 2
+Number of decks: 1
+Number of players: 9
+Initial number of cards offered to each player:1
+Shuffling cards...
+Shuffle result: # shuffle result only displayed in log and demo mode
+Dealing cards...
+# only display current user for a real game, server and demo mode show all players
+Player 1:Hearts 3	Clubs J	
+Player 2:Diamonds 3	Clubs 6	
+Player 3:Spades 6	Clubs 8	
+Player 4:Spades 9	Clubs Q	
+Player 5:Diamonds 8	Clubs 10	
+Player 6:Spades Q	Diamonds 1	
+Player 7:Hearts Q	Diamonds 10	
+Player 8:Clubs 3	Clubs 4	
+Player 9:Hearts 1	Clubs 9	
+
+Determining the playing order...
+Player 1:Hearts 3	
+Player 2:Diamonds 3	
+Player 3:Spades 6	
+Player 4:Spades 9	
+Player 5:Diamonds 8	
+Player 6:Spades Q	
+Player 7:Hearts Q	
+Player 8:Clubs 3	
+Player 9:Hearts 1	
+The game will start with player 9
+---- Game start ----
+First card:Spades J	
+Player 9 draws:Hearts J	
+Player 9 cards:Hearts J	Clubs 9	
+# clear screen here for a real game and show the previously played card (Spades J	)
+Player 1 plays:Clubs J	
+Player 1 wins!
+---- Stats ----
+Round 1 result:
+Player 1:0, total: 0
+Player 2:-1, total: -1
+Player 3:-1, total: -1
+Player 4:-1, total: -1
+Player 5:-1, total: -1
+Player 6:-1, total: -1
+Player 7:-1, total: -1
+Player 8:-1, total: -1
+Player 9:-2, total: -2
+
+Round 1 ends.
+
+Shuffling cards...
+Shuffle result: # shuffle result only displayed in log and demo mode
+Dealing cards...
+# only display current user for a real game, server and demo mode show all players
+Player 1:Spades 4	Spades Q	
+Player 2:Clubs 1	Clubs 7	
+Player 3:Hearts 4	Hearts 5	
+Player 4:Diamonds 2	Diamonds Q	
+Player 5:Hearts 2	Diamonds 7	
+Player 6:Hearts 1	Clubs 5	
+Player 7:Spades 10	Diamonds 5	
+Player 8:Diamonds 1	Diamonds 3	
+Player 9:Spades 5	Clubs K	
+
+Determining the playing order...
+Player 1:Spades 4	
+Player 2:Clubs 1	
+Player 3:Hearts 4	
+Player 4:Diamonds 2	
+Player 5:Hearts 2	
+Player 6:Hearts 1	
+Player 7:Spades 10	
+Player 8:Diamonds 1	
+Player 9:Spades 5	
+The game will start with player 6
+---- Game start ----
+First card:Clubs 10	
+Player 6 plays:Clubs 5	
+Player 6 wins!
+---- Stats ----
+Round 2 result:
+Player 6:0, total: -1
+Player 7:-1, total: -2
+Player 8:-1, total: -2
+Player 9:-1, total: -3
+Player 1:-1, total: -1
+Player 2:-1, total: -2
+Player 3:-1, total: -2
+Player 4:-1, total: -2
+Player 5:-1, total: -2
+
+Round 2 ends.
+
