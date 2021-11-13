@@ -1,0 +1,100 @@
+# p2m3 GTK Version
+
+### Contributor(s) of this project:
+
+*This project is completed solely by Zhou Ziming 521370910142. That means all of the files and codes have been scripted by the author individually.*
+
+Name: Zhou Ziming
+
+Student ID: 521370910142
+
+identity: the ONLY contributor of this project
+
+## About the advanced-mode project (with GTK support)
+
+### Instruction for proper compilation and execution:
+
+The program will run most smoothly on **Windows**, but it can also run on Linux. 
+
+I build up the advanced-mode project in IDE Clion with compiling configuration "**mingw**-64". 
+
+To successfully make it work, install the package **gtk+3.0** in msys2.
+
+Add the mingw bin into the system path
+
+Edit the CmakeList.txt file so that the flag gtk+ could be successfully added to the project (the **CmakeList.txt file in the repo has been written in that way)**
+
+Then use Cmake to compile the whole project.
+
+***Special Notification*：**
+
+The GTK_based version contains display of pictures (as cards). When execute the project, do remember to put the folder "pukeImage" at the same path with the final execution file. Or else the card will not display
+
+### Special Features in the GTK mode
+
+- I've tried to make the GUI mode more close to a real game by adding "setting" and "score" to give the user more free space to handle the game.
+- However, do make sure that there **exists a setting.log and score.log file at the same path with the final execution file** or else the game will output the error and exit with -1.
+- The principle of GTK realization is based on call_back function (which means if a button is clicked then the according call_back function works.) The conventional methods designing the flow of function from the upper to the bottom of the file does not work. Therefore, huge revision has been made towards the original code especially the animation function.
+- In this project I pay super attention to the memory usage. But in GTK mode, the handling of memory seems too opaque for me to figure it out thoroughly. I have debugged for a lot of time without encountering memory issue. But according to some claim on the Internet, the memory leak issue in GTK mode is very tricky therefore I hope I can be safe if any memory leak occurs because of the use of GTK. Hope TA could be careful towards that issue. THANKS A LOT!
+
+### Instruction for the game process
+
+#### Game Process:
+
+The basic game process in this advanced mode is the same as the previous simple-mode. And with the help of GUI anything has been made easier. You can just click the card you want to play instead of inputting a number. And the getchar process is replaced by clicking the continue button. Other process are basically unchanged.
+
+#### Game Startup:
+
+For this advanced version. There is an opening GUI continuously waiting for you (if you start a new game, it will only open a new window without destroying the opening one), that means you can open as many as window as you want. You can play two games simultaneously, or see the score page at the same time of manipulating the setting, which makes the game extremely fun.
+
+There are four initial button for the startup of the game:
+
+1. start: obviously to start the game
+
+2. score: display the score from "score.log" (remember to have the file and every Stime a game end, the new score will rewrite the former one)
+
+3. setting: display the score from "setting.log" (remember to have the file, and press save before quit if you want to put your own setting into action
+
+   ​	More about the setting mode: there are basic properties (number of cards, rounds ... ) listed. Use the '-' and '+' button at their right to manipulate the value ('-' stands for 'minus one' while '+' stands for 'plus one')
+
+4. quit: to formally quit the game.
+
+## Project Structures
+
+### Summary of each file mainly features:
+
+##### main.c
+
+get argument in the command line initialize the setting of the game, prepare for animation
+
+##### basic.h
+
+set up Player Related operation
+
+structure Player/Player_Info/table/game_status
+
+##### basic.c
+
+function regarding table/player manipulation
+
+##### card_pile.h
+
+set up Pile Related operation
+
+structure card_pile
+
+##### card.c
+
+function regarding card_pile manipulation
+
+##### mgtk.c/mgtk.h
+
+any gtk_related operation
+
+##### log.c/log.h
+
+any operation related with the log file
+
+##### GTK_ENABLED.h
+
+an independant file documenting whether GTK is defined or not

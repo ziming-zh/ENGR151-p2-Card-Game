@@ -217,7 +217,7 @@ any operation related with the log file
 
 an independant file documenting whether GTK is defined or not
 
-##### GTK_ENABLED.h
+##### MUL_ENABLED.h
 
 an independant file documenting whether MUL is defined or not
 
