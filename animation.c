@@ -268,9 +268,10 @@ void animation(table *t,game_status *st,pile *dock_pile,pile *disc_pile,int* cou
 
 
             //prepare for the next player
-            move(t,st->dir);
+
             cur=nxt;
         }
+        move(t,st->dir);
         pl+=st->dir;
         if(pl<=0)
             pl+=n;

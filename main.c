@@ -5,7 +5,7 @@
 #include "basic.h"
 #include "animation.h"
 #include "log.h"
-
+#include "MUL_ENABLED.h"
 
 
 #ifdef GTK
@@ -13,7 +13,7 @@
 #endif
 
 #ifndef GTK
-void game(int r,int d,int num,int c,FILE* log)
+void game(int r,int d,int num,int c,FILE* log,int m)
 {
 
 
@@ -92,7 +92,7 @@ void game(int r,int d,int num,int c,FILE* log)
                 push_card(&disc_pile,card[pl][i]);
             }
             qsort(card[pl],(size_t)c+1,sizeof(int),cmpf);
-            add_player(&t,init_player(c,card[pl],score[pl]),dir);
+            add_player(&t,init_player(c,card[pl],score[pl],m),dir);
         }
         if(log!=NULL)
             fprintf(log,"\n# only display current user for a real game, server and demo mode show all players\n");
@@ -148,6 +148,7 @@ void init_start(int argc, char *argv[])
     int option;
     char *arg;
     int r=1,d=2,num=4,c=5;
+    int m=1;
     FILE *log=NULL;
     static struct option long_opts[]=
     {
@@ -155,15 +156,23 @@ void init_start(int argc, char *argv[])
         {"log",required_argument,NULL,'l'},
         {"player-number=",required_argument,NULL,'n'},
         {"initial-cards=",required_argument,NULL,'c'},
-        {"decks",required_argument,NULL,'d'},
-        {"rounds",required_argument,NULL,'r'},
+        {"decks=",required_argument,NULL,'d'},
+        {"rounds=",required_argument,NULL,'r'},
         {"auto",no_argument,NULL,'a'},
+#ifdef MUL
+        {"move=",required_argument,NULL,'m'},
+#endif
         {NULL,0,NULL,0},
     };
     setvbuf(stdout, NULL, _IONBF, 0);
 
     while(1) {
+#ifndef MUL
         option= getopt_long(argc,argv,"hn:c:d:r:a",long_opts,NULL);
+#endif
+#ifdef MUL
+        option= getopt_long(argc,argv,"hn:c:d:r:am:",long_opts,NULL);
+#endif
         if(option==-1)  break;
         //printf("%c\n",option);
         //printf("%s",optarg);
@@ -171,11 +180,14 @@ void init_start(int argc, char *argv[])
         {
             case 'h': printf("help\n"); print_help(); break;
 
-            case 'n': arg=optarg;   sscanf(arg,"%d",&num);  printf("<num> %d\n",num);   break;
-            case 'c': arg=optarg;   sscanf(arg,"%d",&c);    printf("<card> %d\n",c);  break;
-            case 'r': arg=optarg;   sscanf(arg,"%d",&r);    printf("<round> %d\n",r); break;
-            case 'd': arg=optarg;   sscanf(arg,"%d",&d);    printf("<deck> %d\n",d);  break;
+            case 'n': arg=optarg;   sscanf(arg,"%d",&num);     break;
+            case 'c': arg=optarg;   sscanf(arg,"%d",&c);      break;
+            case 'r': arg=optarg;   sscanf(arg,"%d",&r);     break;
+            case 'd': arg=optarg;   sscanf(arg,"%d",&d);      break;
             case 'a': read_log("demo.log"); break;
+#ifdef MUL
+            case 'm': arg=optarg;   sscanf(arg,"%d",&m); break;
+#endif
             case 'l': {
                 arg=optarg;
 
@@ -226,7 +238,7 @@ void init_start(int argc, char *argv[])
 #endif
 
 #ifndef GTK
-    game(r, d, num, c, log);
+    game(r, d, num, c, log,m);
 #endif
 
     close_log(log);

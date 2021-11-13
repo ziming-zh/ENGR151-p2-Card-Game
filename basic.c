@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "card_pile.h"
+#include "MUL_ENABLED.h"
 #ifdef GTK
 #include "mgtk.h"
 #endif 
@@ -23,6 +24,9 @@ void print_help(void)
            "-d d|--decks=d use d decks 52 cards each, d must be at least 2 (default: 2)\n"
            "-r r|--rounds=r play r rounds, r must be at least 1 (default: 1)\n"
            "-a|--auto run in demo mode\n");
+#ifdef MUL
+    printf("-m m|--move=m play m cards per turn for a player (default 1)");
+#endif
     printf("Now Start the game or not <y/n>:");
     if(scanf("%c",&o)){}
     if(o!='y')  exit(EXIT_SUCCESS);
@@ -224,11 +228,12 @@ table init_order(table *t,pile* disc_pile,FILE *log)
     seed.pl=first_player;
     return seed;
 }
-player_info init_player(int c,int* ori_card,int score)
+player_info init_player(int c,int* ori_card,int score,int m)
 {
     player_info pl;
     pl.score=score;
-    pl.move=MOVE;
+    pl.move=m; /// for multiple card-play disabled, the player could only play one card at a time
+
     pl.card_num=c+1;
     pl.card=ori_card;
 

@@ -27,8 +27,8 @@ identity: the ONLY contributor of this project
   - Write a function to decide the first player: function "init_order" in "basic.c"
   - Write functions allowing several players to play together: function "animation" in "animation.c"
   - Write a function to calculate the round and game result": game_winning detection (embedded in function "game" in "main.c")
-  - Define the deck data structure using an array;
-  - Arrange all the players in an array;
+  - Define the deck data structure using an array (This part revised in milestone 3)
+  - Arrange all the players in an array (This part revised in milestone 3)
 - Milestone 3
   - Use a circular double linked list for the players; (struct "table" together with struct "player" in file "basic.h")
   - Use a dynamic array to handle the stock and discard piles; (struct "pile" together with struct "node" in file "card_pile.h")
@@ -37,13 +37,17 @@ identity: the ONLY contributor of this project
   - Complete both the real game and the demo mode; (demo mode is not written in GTK version since the whole translation is too complex, the command-line demo showing function is "read_log" in file "log.c")
   - Proof-read you code and ensure it is fully complying with the C standard, C11 revision; 
 
-
-
-
-
 *Special Notation:* NONE
 
+##### Bonus Part: <1>
 
+bonus <1> is for allowing players to play more than one card on their turn;
+
+​	To enact this function go to file MUL_ENABLED.h and delete the comment mark at the beginning of line 7 or define a macro MUL in the command line;
+
+​	Then add -m m or "--move=m" parameter to adjust the number of cards a player can play in one turn
+
+*Special Notation:* The Bonus part 1 is not compatible with Bonus part 4. That means in the GTK mode you could only play one card at a time.
 
 ##### Bonus Part: <4>
 
@@ -51,7 +55,7 @@ bonus <4> is for ''Using a toolkit to implement a GUI"
 
 ​	for this bonus I'm using the gtk+3.0 package in mingw64
 
-For further explanation please go to section "GTK_mode Illustration"l 
+For further explanation please go to section "About the advanced-mode project (with GTK support)"
 
 
 ### Special things learnt in P2
@@ -212,6 +216,12 @@ any operation related with the log file
 ##### GTK_ENABLED.h
 
 an independant file documenting whether GTK is defined or not
+
+##### GTK_ENABLED.h
+
+an independant file documenting whether MUL is defined or not
+
+(a switch to turn on/off the multiple card playing mode)
 
 ### Bug Section:
 

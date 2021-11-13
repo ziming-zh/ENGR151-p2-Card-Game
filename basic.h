@@ -96,7 +96,7 @@ int move(table *t,int dir);
 
 
 
-player_info init_player(int c,int* ori_card,int score);
+player_info init_player(int c,int* ori_card,int score,int m);
 void add_player(table *t,player_info pinf,int dir);
 player_info delete_player(table *t,int dir);
 
