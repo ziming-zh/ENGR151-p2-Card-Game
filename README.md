@@ -1,4 +1,4 @@
-# p2m3 has finished
+# ENGR151-p2 Card Game
 
 ### Contributor(s) of this project:
 
@@ -16,7 +16,7 @@ identity: the ONLY contributor of this project
 
 - Milestone 1
   - Define the card structure: struct card_pile in "card_pile.h"
-  - Define the player structure : struct player in "basic.h"
+  - Define the player structure: struct player in "basic.h"
   - Accept command line arguments: in "main.c"
   - Write a function to play a card: separate it into card-related functions "add_card","read_card"and"delete_card" in "basic.c"
   - Write a function to draw (take) a card from the card pile: separate it into pile-related functions "push_card","pull_card" in "card_pile.c"
